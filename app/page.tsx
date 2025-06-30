@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { Plus, Minus } from "lucide-react"
 import styles from "./metronome.module.css"
+import MobileAuthButton from "@/components/auth/mobile-auth-button"
 
 export default function Metronome() {
   // ===== CONFIGURABLE VARIABLES =====
@@ -205,20 +206,18 @@ export default function Metronome() {
       oscillator.type = "sine"
       oscillator.frequency.setValueAtTime(220, context.currentTime)
 
-      gainNode.gain.setValueAtTime(0.6, context.currentTime)
-      gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.1)
+      gainNode.gain.setValueAtTime(0.4, context.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.05)
 
       oscillator.connect(gainNode)
       gainNode.connect(context.destination)
 
       oscillator.start(context.currentTime)
-      oscillator.stop(context.currentTime + 0.1)
+      oscillator.stop(context.currentTime + 0.05)
     } catch (error) {
       console.error("Error playing tap tone:", error)
     }
   }
-
-  // Add the TAP button functions after the existing functions:
 
   const handleTap = () => {
     const now = Date.now()
@@ -425,45 +424,22 @@ export default function Metronome() {
       cancelAnimationFrame(animationRef.current)
       animationRef.current = null
     }
-    setDotPosition(0)
   }
 
-  // Track when dot reaches 75% position (270 degrees)
+  // Handle 75% position reached
   const handle75Percent = () => {
-    if (isPlaying && dotPosition >= 270 && !hasReached75Percent) {
+    if (!hasReached75Percent) {
       setHasReached75Percent(true)
+      setScaleEffect(1.05) // Slight zoom effect
+
+      // Reset scale after a short delay
+      setTimeout(() => {
+        setScaleEffect(1)
+      }, 100)
     }
   }
 
-  useEffect(() => {
-    handle75Percent()
-  }, [dotPosition, isPlaying, hasReached75Percent])
-
-  // Calculate zoom effect based on dot position (only after reaching 75% position)
-  useEffect(() => {
-    if (isPlaying && hasReached75Percent) {
-      const isInZoomRange = dotPosition >= 270 || dotPosition <= 90
-
-      if (isInZoomRange) {
-        let distanceFromTop
-        if (dotPosition >= 270) {
-          distanceFromTop = 360 - dotPosition
-        } else {
-          distanceFromTop = dotPosition
-        }
-
-        const maxZoomDistance = 90
-        const zoomFactor = 0.7 + 0.2 * (1 - distanceFromTop / maxZoomDistance)
-        setScaleEffect(zoomFactor)
-      } else {
-        setScaleEffect(0.7)
-      }
-    } else {
-      setScaleEffect(0.7)
-    }
-  }, [dotPosition, isPlaying, hasReached75Percent])
-
-  // Animation function
+  // Main animation function
   const animateMetronome = () => {
     const animate = (timestamp: number) => {
       if (!isPlaying) {
@@ -791,6 +767,9 @@ export default function Metronome() {
 
   return (
     <div className={styles.container}>
+      {/* Mobile-optimized Auth Button */}
+      {/* <MobileAuthButton /> */}
+
       <div
         className={styles.metronomeCircle}
         onClick={togglePlay}
