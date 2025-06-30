@@ -9,7 +9,7 @@ import MobileAuthButton from "@/components/auth/mobile-auth-button"
 
 export default function Metronome() {
   // ===== CONFIGURABLE VARIABLES =====
-  const MAX_TRIAL_SESSION_COUNT = 2 // After this many sessions, trial mode kicks in
+  const MAX_TRIAL_SESSION_COUNT = 100 // After this many sessions, trial mode kicks in
   const EXPIRED_TRIAL_RUN_TIME_SECONDS = 10 // How long metronome runs before decrement mode
 
   const [bpm, setBpm] = useState(70) // Default 70 BPM - this is the actual BPM used for timing
