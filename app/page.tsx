@@ -1077,7 +1077,7 @@ export default function Metronome() {
             5 minutes.
           </p>
           <div className={styles.upgradeButtons}>
-            <button className={styles.upgradeButton} onClick={handleUpgrade}>
+            <button className={styles.upgradeButton} onClick={handleUpgrade} id="upgradeButton">
               Upgrade Now
             </button>
             <button className={styles.standardButton} onClick={handleFiveMinuteSessions}>
